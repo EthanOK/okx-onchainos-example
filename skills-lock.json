@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "okx-dex-market": {
+      "source": "okx/onchainos-skills",
+      "sourceType": "github",
+      "computedHash": "68d2e8642aeb274d9106b871027eeb8d1616a0aae89186aeed8f4051cde24001"
+    },
+    "okx-dex-token": {
+      "source": "okx/onchainos-skills",
+      "sourceType": "github",
+      "computedHash": "3b87ddedc6e9db1a94e1385601aed8444292b7c59c65842bf15b9281af6e111a"
+    }
+  }
+}
