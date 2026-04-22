@@ -4,6 +4,7 @@ import "dotenv/config";
 export const OKX_BASE_URL = "https://web3.okx.com";
 export const OKX_PRICE_INFO_PATH = "/api/v6/dex/market/price-info";
 export const OKX_CANDLES_PATH = "/api/v6/dex/market/candles";
+export const OKX_HISTORY_CANDLES_PATH = "/api/v6/dex/market/historical-candles";
 
 export type OkxDexTokenPriceInfo = {
   chainIndex: string;
@@ -69,6 +70,16 @@ export type OkxDexCandle = {
   vol: string;
   volUsd: string;
   confirm: "0" | "1";
+};
+
+export type OkxDexHistoryCandle = {
+  ts: string;
+  o: string;
+  h: string;
+  l: string;
+  c: string;
+  vol: string;
+  volUsd: string;
 };
 
 export function shellSingleQuote(s: string) {
