@@ -37,8 +37,8 @@ export async function getCandles(params: {
   if (params.bar) query.set("bar", params.bar);
   if (params.limit) {
     const limit = Number(params.limit);
-    if (!Number.isFinite(limit) || limit <= 0 || limit > 299) {
-      throw new Error("limit must be a numeric string between 1 and 299");
+    if (!Number.isFinite(limit) || limit <= 0 || limit > 1400) {
+      throw new Error("limit must be a numeric string between 1 and 1400");
     }
     query.set("limit", params.limit);
   }
