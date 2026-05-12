@@ -5,7 +5,24 @@ export const formatTs = (ts: string) => {
   return `${utc} UTC`;
 };
 
+/** 推送时间：本地 `YYYY-MM-DD HH:mm:ss.mmm`，毫秒便于区分密集更新 */
+export function formatPushTime(ts: string): string {
+  const n = Number(ts);
+  if (!Number.isFinite(n)) return String(ts);
+  const ms = n < 1e12 ? n * 1000 : n;
+  const d = new Date(ms);
+  const p2 = (x: number) => String(x).padStart(2, "0");
+  const p3 = (x: number) => String(x).padStart(3, "0");
+  return (
+    `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())} ` +
+    `${p2(d.getHours())}:${p2(d.getMinutes())}:${p2(d.getSeconds())}.${p3(d.getMilliseconds())}`
+  );
+}
+
 export const SYMBOL_TO_ADDRESS = {
+  // ETH
+  ETH: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+
   // GOLD
   XAUT: "0x68749665FF8D2d112Fa859AA293F07A622782F38",
   PAXG: "0x45804880de22913dafe09f4980848ece6ecbaf78",
@@ -21,6 +38,7 @@ export const SYMBOL_TO_ADDRESS = {
   AMZNon: "0xbb8774fb97436d23d74c1b882e8e9a69322cfd31",
   MSFTon: "0xb812837b81a3a6b81d7cd74cfb19a7f2784555e5",
   SLVon: "0xf3e4872e6a4cf365888d93b6146a2baa7348f1a4",
+  BMNRon: "0x33483a58079b4225b10e57958ca28ad7b9cdbaf7",
 } as const;
 
 export type BricSwapSymbol = keyof typeof SYMBOL_TO_ADDRESS;
