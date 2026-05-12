@@ -54,7 +54,11 @@ function redrawPriceBoard() {
   const lines: string[] = [
     `${S.bold}${S.cyan}OKX DEX WebSocket  price-info  chainIndex=1  （原地刷新，Ctrl+C 退出）${S.r}`,
     statusLine
-      ? `${S.yellow}状态:${S.r} ${S.dim}${statusLine}${S.r}`
+      ? `${S.yellow}状态:${S.r} ${
+          statusLine === "success"
+            ? `${S.green}${statusLine}${S.r}`
+            : `${S.dim}${statusLine}${S.r}`
+        }`
       : "",
     `${S.cyan}推送覆盖:${S.r} ${receivedPriceLower.size}/${expectedLower.size}` +
       (missingLabels
@@ -116,6 +120,12 @@ const client = await connectLoginAndSubscribe({
         redrawPriceBoard();
       }
 
+      // 登录成功：显示 success，并覆盖旧的 WebSocket error（error 事件常挂在已废弃的 socket 上）
+      if (root.event === "login" && String(root.code ?? "") === "0") {
+        statusLine = "success";
+        redrawPriceBoard();
+      }
+
       const arg = (m as any)?.arg;
       const channel = arg?.channel;
       if (channel == "price-info") {
@@ -123,6 +133,7 @@ const client = await connectLoginAndSubscribe({
           | OkxDexTokenPriceInfo
           | undefined;
         if (!priceInfo?.price) return; // e.g. subscribe ack / non-data events
+        statusLine = "success";
         const addrLower = String(arg?.tokenContractAddress ?? "").toLowerCase();
         if (addrLower) {
           receivedPriceLower.add(addrLower);
