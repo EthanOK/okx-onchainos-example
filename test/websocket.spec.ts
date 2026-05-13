@@ -4,6 +4,7 @@ import {
 } from "../src/OkxDexWebSocket.ts";
 import type { OkxDexTokenPriceInfo } from "../src/Utils.ts";
 import {
+  formatPriceTruncated,
   formatPushTime,
   getBricSwapTokenAddresses,
   getSymbolFromAddress,
@@ -74,7 +75,7 @@ function redrawPriceBoard() {
     if (row) {
       lines.push(
         `${S.yellow}${sym.padEnd(10)}${S.r}  ` +
-          `${S.dim}price${S.r} ${S.bold}${Number(row.price).toFixed(2).padStart(12)}${S.r}  ` +
+          `${S.dim}price${S.r} ${S.bold}${formatPriceTruncated(row.price, 6).padStart(18)}${S.r}  ` +
           `${S.dim}24h${S.r} ${color24hChange(row.priceChange24H)}  ` +
           `${S.dim}时间 ${formatPushTime(row.time)}${S.r}`,
       );

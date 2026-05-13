@@ -23,6 +23,9 @@ export const SYMBOL_TO_ADDRESS = {
   // ETH
   ETH: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
 
+  USDT: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+  USDC: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+
   // GOLD
   XAUT: "0x68749665FF8D2d112Fa859AA293F07A622782F38",
   PAXG: "0x45804880de22913dafe09f4980848ece6ecbaf78",
@@ -42,6 +45,29 @@ export const SYMBOL_TO_ADDRESS = {
 } as const;
 
 export type BricSwapSymbol = keyof typeof SYMBOL_TO_ADDRESS;
+
+/**
+ * 价格字符串：保留 `decimals` 位小数，**直接截取**（不四舍五入），不足右侧补 0。
+ * 优先按十进制字符串处理，减少 `Number` 带来的二进制误差。
+ */
+export function formatPriceTruncated(raw: string, decimals = 6): string {
+  let s = String(raw).trim();
+  if (s.startsWith("+")) s = s.slice(1);
+  const neg = s.startsWith("-");
+  const rest = neg ? s.slice(1) : s;
+  if (!/^\d*\.?\d*$/.test(rest)) {
+    const n = Number(s);
+    if (!Number.isFinite(n)) return s;
+    const f = 10 ** decimals;
+    return (Math.trunc(n * f) / f).toFixed(decimals);
+  }
+  const dot = rest.indexOf(".");
+  const intRaw = dot === -1 ? rest : rest.slice(0, dot);
+  const fracRaw = dot === -1 ? "" : rest.slice(dot + 1);
+  const intPart = intRaw === "" ? "0" : intRaw;
+  const frac = (fracRaw + "0".repeat(decimals)).slice(0, decimals);
+  return `${neg ? "-" : ""}${intPart}.${frac}`;
+}
 
 export const getBricSwapTokenAddresses = () => {
   return Object.values(SYMBOL_TO_ADDRESS);
